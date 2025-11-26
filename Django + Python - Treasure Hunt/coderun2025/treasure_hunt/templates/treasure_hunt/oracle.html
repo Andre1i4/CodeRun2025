@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Oracle | Final Boss</title>
+    <link rel="stylesheet" href="{% static 'treasure_hunt/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <a href="{% url 'compass' %}" class="back-link">← Return to Map</a>
+        
+        <h1>🔮 The Mystic Oracle</h1>
+        
+        {% if is_at_treasure %}
+            <div class="glass-card" style="border-color: gold; box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);">
+                <h2 style="color: gold;">🔒 TREASURE LOCKED</h2>
+                <p style="text-align: center;">"Enter the 4-digit code to open the chest."</p>
+                
+                <form method="post" style="display: flex; flex-direction: column; align-items: center;">
+                    {% csrf_token %}
+                    <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                        {{ chest_form.digit1 }}
+                        {{ chest_form.digit2 }}
+                        {{ chest_form.digit3 }}
+                        {{ chest_form.digit4 }}
+                    </div>
+                    <button type="submit" style="background: gold; color: black; max-width: 200px;">UNLOCK</button>
+                </form>
+            </div>
+
+            {% if previous_guesses %}
+                <div class="glass-card">
+                    <h3>Previous Attempts</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        {% for guess in previous_guesses %}
+                            <li style="border-bottom: 1px solid rgba(255,255,255,0.1); padding: 10px; font-size: 0.9em;">
+                                {{ guess.description }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+        {% else %}
+            <div class="glass-card">
+                <p style="text-align: center; opacity: 0.8;">"Speak the ancient ID..."</p>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Invoke the Oracle</button>
+                </form>
+            </div>
+        {% endif %}
+
+        {% if new_instruction %}
+            <div class="glass-card" style="border-color: #2ecc71;">
+                <h2 style="color: #2ecc71;">Oracle Response</h2>
+                <div class="detail-grid">
+                    <div class="info-col">
+                        <p><strong>Prophecy:</strong> "{{ new_instruction.description }}"</p>
+                    </div>
+                    <div class="visual-col">
+                        <div class="compass-circle">
+                             <img src="{% static 'treasure_hunt/'|add:new_instruction.direction|add:'.svg' %}" width="80">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        
+        {% if error_message %}
+            <p style="color: red; text-align: center;">{{ error_message }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>

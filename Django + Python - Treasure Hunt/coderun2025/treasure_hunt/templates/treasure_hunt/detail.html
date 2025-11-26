@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Step Details | Premium</title>
+    <link rel="stylesheet" href="{% static 'treasure_hunt/style.css' %}">
+</head>
+<body>
+
+<div class="container">
+    <a href="{% url 'compass' %}" class="back-link">
+        <span style="font-size: 1.2rem; margin-right: 5px;">&#8592;</span> Return to Map
+    </a>
+
+    <div class="glass-card">
+        <h2>Waypoint #{{ instruction.id }} Analysis</h2>
+        
+        <div class="detail-grid">
+            <div class="info-col">
+                <div class="info-row">
+                    <span class="info-label">Direction</span>
+                    <span class="info-value gold">{{ instruction.get_direction_display }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Distance</span>
+                    <span class="info-value">{{ instruction.distance }} nm</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Risk Level</span>
+                    <span class="info-value" style="color: #ff6b6b;">{{ instruction.risk_level }}%</span>
+                </div>
+                <div class="info-row" style="border: none; display: block; padding-top: 20px;">
+                    <span class="info-label">Captain's Log:</span>
+                    <p style="font-style: italic; margin-top: 5px; opacity: 0.8;">"{{ instruction.description }}"</p>
+                </div>
+            </div>
+
+            <div class="visual-col" style="display: flex; justify-content: center;">
+                <div class="compass-circle">
+                     <img src="{% static 'treasure_hunt/'|add:instruction.direction|add:'.svg' %}" 
+                          width="80" height="80" 
+                          style="filter: drop-shadow(0 0 5px gold);">
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px;">
+            <a href="?summary=true">
+                <button>Calculate Total Trajectory (Oracle)</button>
+            </a>
+        </div>
+
+        {% if show_summary %}
+            <div class="glass-card" style="background: rgba(212, 175, 55, 0.1); margin-top: 20px; border-color: var(--primary-gold);">
+                <h3 style="font-size: 1.2rem;">🔮 Projection Results</h3>
+                <div style="display: flex; justify-content: space-around; margin-top: 20px; text-align: center;">
+                    <div>
+                        <span class="info-label">Total Distance</span><br>
+                        <span class="info-value" style="font-size: 1.5rem;">{{ total_distance }} nm</span>
+                    </div>
+                    <div>
+                        <span class="info-label">Avg. Risk</span><br>
+                        <span class="info-value" style="font-size: 1.5rem; color: #ff6b6b;">{{ avg_risk|floatformat:2 }}%</span>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>
