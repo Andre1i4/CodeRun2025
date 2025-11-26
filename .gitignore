@@ -1,0 +1,16 @@
+# C++ and Visual Studio junk
+*.exe
+*.dll
+*.obj
+*.pdb
+*.user
+*.ncb
+*.sbr
+.vs/
+x64/
+Debug/
+Release/
+build/
+
+# Mac junk
+.DS_Store
